@@ -15,19 +15,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 COPY . .
 RUN bun run build
 
-# Entferne Quellcode und kopiere alle Dateien in den .next-Ordner
+# Entferne unnötige Quellcodedateien, um die Bildgröße zu reduzieren
 RUN rm -rf pages public styles components
-RUN mkdir -p .next
-RUN cp -r * .next/
-
-# Optional: Entferne das node_modules-Verzeichnis, um Platz zu sparen
-RUN rm -rf node_modules
-
-# Installiere die Abhängigkeiten erneut
-RUN bun install
-
-# Setze das Arbeitsverzeichnis auf den .next-Ordner
-WORKDIR /app/.next
 
 # Exponiere den Port
 EXPOSE 3000
