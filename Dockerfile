@@ -9,6 +9,11 @@ RUN bun install
 # Kopiere den Rest des Codes
 COPY . .
 
+ENV NODE_ENV=production
+
+# Uncomment the following line in case you want to disable telemetry during runtime.
+ENV NEXT_TELEMETRY_DISABLED=1
+
 # Baue die Anwendung
 RUN bun run build
 
