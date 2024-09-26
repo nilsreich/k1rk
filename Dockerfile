@@ -15,9 +15,6 @@ ENV NEXT_TELEMETRY_DISABLED=1
 COPY . .
 RUN bun run build
 
-# Entferne unnötige Quellcodedateien, um die Bildgröße zu reduzieren
-RUN rm -rf pages public styles components
-
 # Exponiere den Port
 EXPOSE 3000
 
