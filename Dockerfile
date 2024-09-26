@@ -1,5 +1,4 @@
-# Stage 1: Build Stage
-FROM oven/bun:latest AS builder
+FROM oven/bun:latest
 
 WORKDIR /app
 
@@ -9,26 +8,26 @@ RUN bun install
 
 ENV NODE_ENV=production
 
-# Uncomment the following line in case you want to disable telemetry during runtime.
+# Deaktiviere Telemetrie während der Laufzeit
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Kopiere den restlichen Code und baue die Anwendung
 COPY . .
 RUN bun run build
 
-# Stage 2: Production Stage
-FROM oven/bun:latest
+# Entferne Quellcode und kopiere alle Dateien in den .next-Ordner
+RUN rm -rf pages public styles components
+RUN mkdir -p .next
+RUN cp -r * .next/
 
-WORKDIR /app
+# Optional: Entferne das node_modules-Verzeichnis, um Platz zu sparen
+RUN rm -rf node_modules
 
-# Kopiere nur die notwendigen Dateien aus der Build-Stage
-COPY --from=builder /app/.next/ ./.next/
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/bun.lockb ./
-COPY --from=builder /app/next.config.js ./
+# Installiere die Abhängigkeiten erneut
+RUN bun install
 
-# Installiere nur die Produktionsabhängigkeiten
-RUN bun install --production
+# Setze das Arbeitsverzeichnis auf den .next-Ordner
+WORKDIR /app/.next
 
 # Exponiere den Port
 EXPOSE 3000
